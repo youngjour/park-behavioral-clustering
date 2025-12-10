@@ -1,0 +1,166 @@
+% \documentclass[preprint,12pt]{elsarticle}
+\documentclass[preprint,12pt,authoryear]{elsarticle}
+% \documentclass[review,doubleblind]{elsarticle}
+
+%% Use the option review to obtain double line spacing
+%% \documentclass[authoryear,preprint,review,12pt]{elsarticle}
+
+%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
+%% for a journal layout:
+%% \documentclass[final,1p,times]{elsarticle}
+%% \documentclass[final,1p,times,twocolumn]{elsarticle}
+%% \documentclass[final,3p,times]{elsarticle}
+%% \documentclass[final,3p,times,twocolumn]{elsarticle}
+%% \documentclass[final,5p,times]{elsarticle}
+%% \documentclass[final,5p,times,twocolumn]{elsarticle}
+
+%% For including figures, graphicx.sty has been loaded in
+%% elsarticle.cls. If you prefer to use the old commands
+%% please give \usepackage{epsfig}
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+
+\usepackage{lineno,hyperref}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs} 
+\usepackage{hyperref} % Hyperlinks
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{geometry}
+% \geometry{a4paper, margin=1in}
+\usepackage{lineno}   % Line numbers for review
+\usepackage{longtable}  % For long tables split across pages
+\usepackage{array}
+
+% \modulolinenumbers[5]
+
+\journal{Urban Forestry \& Urban Greening}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Title, authors and addresses
+
+\title{Beyond Administrative Boundaries: Real-time Behavioral Profiling and Structural Inelasticity of Urban Park Usage}
+
+\author[inst1]{Youngjun Park}
+\affiliation[inst1]{organization={Urban AI Institute, Korea Advanced Institute of Science and Technology},
+            addressline={291 Daehak-ro, Yuseong-gu}, 
+            city={Daejeon},
+            postcode={34141}, 
+            country={Republic of Korea}
+            }
+
+\author[inst2]{Jisun An}
+\author[inst3]{Dongman Lee}
+
+\affiliation[inst2]{organization={Luddy School of Informatics Computing and Engineering, Indiana University Bloomington},
+            addressline={700 N Woodlawn Avenue}, 
+            city={Bloomington},
+            postcode={47408}, 
+            state={Indiana},
+            country={United States}}
+
+\affiliation[inst3]{organization={School of Computing, Korea Advanced Institute of Science and Technology},
+            addressline={291 Daehak-ro, Yuseong-gu}, 
+            city={Daejeon},
+            postcode={34141}, 
+            country={Republic of Korea}
+            }
+
+\ead{dlee@kaist.ac.kr}
+
+%% Abstract
+\begin{abstract}
+Urban parks are essential for sustainable cities, yet a significant mismatch often exists between planned functions and actual usage patterns. Traditional park classifications, based on static administrative criteria, fail to capture the dynamic temporal behaviors of visitors. This study leverages high-resolution, 10-minute interval real-time population data from 18 representative parks in Seoul, South Korea, to propose a new behavioral typology. By integrating multi-source data—including facility inventories, network metrics, and transit accessibility—we employ a comparative machine learning approach. Our results demonstrate that the XGBoost classifier (Accuracy: 47.1\%, F1: 0.33) significantly outperforms traditional Logistic Regression and Random Forest, achieving statistically significant predictive power ($p < 0.05$) even with a small sample size ($N=17$). We identified distinct behavioral clusters, including \textit{Local Senior Hubs}, \textit{Consistent Active Parks}, \textit{Niche Tourist Spots}, and \textit{Weekend Youth Destinations}. Crucially, SHAP (SHapley Additive exPlanations) analysis reveals a phenomenon of ``Structural Inelasticity,'' where macro-scale factors like transit accessibility and surrounding population density dominate micro-scale facility attributes in determining visitor profiles. These findings suggest that providing amenities alone cannot overcome locational disadvantages such as poor transit access. We conclude by proposing a data-driven pre-assessment framework for park planning to optimize the social function of new green spaces.
+\end{abstract}
+
+%% Keywords
+\begin{keyword}
+Urban big data \sep Behavioral clustering \sep Structural inelasticity \sep Park planning \sep Spatio-temporal analysis \sep XGBoost
+\end{keyword}
+
+\end{frontmatter}
+
+\linenumbers
+
+%% Main Text
+
+\section{Introduction}
+\label{sec:intro}
+Urban parks serve as critical infrastructure for enhancing the quality of life, providing ecosystem services, and fostering social interaction in high-density cities \citep{konijnendijk2013benefits, kuo2015might}. However, the prevailing planning paradigm often follows a ``supply-oriented'' approach, assuming that providing green space guarantees utilization. This assumption frequently leads to the ``Urban Green Paradox,'' where some parks suffer from overcrowding while others remain underutilized despite similar administrative statuses.
+
+The limitation of current planning lies in its reliance on static administrative classifications (e.g., Neighborhood Park vs. Regional Park), which are defined primarily by physical area and theoretical service radius. These static criteria fail to account for the dynamic nature of human behavior—specifically, \textit{when} (temporal dynamics), \textit{who} (demographics), and \textit{how} (mobility) citizens actually use these spaces.
+
+This study aims to bridge this gap by analyzing 10-minute interval real-time population data across 18 major parks in Seoul. Our objectives are three-fold: (1) to derive a new ``Behavioral Typology'' of urban parks that reflects actual usage patterns; (2) to identify the key determinants of these behaviors by comparing machine learning models (Logistic Regression vs. XGBoost); and (3) to propose the concept of ``Structural Inelasticity'' in park usage, providing a data-driven framework for future park planning and site selection.
+
+\section{Data and Methods}
+\label{sec:methods}
+
+\subsection{Study Area and Data Integration}
+This study focuses on Seoul, South Korea. We selected 18 representative parks with consistent real-time data availability. To understand the multifaceted drivers of park usage, we integrated heterogeneous datasets:
+\begin{itemize}
+    \item \textbf{Behavioral Data}: Real-time visitor counts (10-min interval), Age/Gender distribution, and Congestion levels from Seoul Open Data.
+    \item \textbf{Physical Attributes}: Park area, facility counts (restrooms, playgrounds, sports facilities) from official inventories.
+    \item \textbf{Network \& Transit}: Network centrality (OSMnx), subway/bus station counts, and transit ridership.
+\end{itemize}
+
+\subsection{Analytic Framework}
+The analysis proceeded in three phases:
+\begin{enumerate}
+    \item \textbf{Behavioral Clustering}: Identifying distinct usage patterns (K-Means) based on temporal, demographic, and congestion features.
+    \item \textbf{Variable Engineering}: Constructing 20 explanatory variables across Spatial, Internal, Network, and Transit dimensions.
+    \item \textbf{Predictive Modeling}: Using Leave-One-Out Cross-Validation (LOOCV) to compare Logistic Regression, SVM, Random Forest, and XGBoost classifiers in predicting the behavioral clusters.
+\end{enumerate}
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Behavioral Typology}
+We identified five initial behavioral clusters for the 18 parks. After filtering outliers (singleton clusters), four robust types emerged:
+\begin{itemize}
+    \item \textbf{Cluster 0 (Local Senior Hubs)}: High local and senior usage, moderate traffic, consistent morning activity.
+    \item \textbf{Cluster 1 (Consistent Active Parks)}: High traffic volume (Avg 5k) with high consistency. Balanced demographics.
+    \item \textbf{Cluster 2 (Niche Tourist Spots)}: High tourist ratio (87\%) and male dominance. Low overall volume, likely specialized facilities.
+    \item \textbf{Cluster 4 (Weekend Youth Destinations)}: High weekend boost (1.38x) and youth presence. Strong afternoon bias.
+\end{itemize}
+
+\subsection{Determinants of Visiting Behavior}
+\subsubsection{Model Performance}
+Using LOOCV on the filtered dataset ($N=17$), the XGBoost classifier achieved the best performance.
+
+\begin{table}[h]
+\centering
+\caption{Performance Comparison of Classification Models (LOOCV)}
+\label{tab:model_comparison}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Model} & \textbf{Accuracy} & \textbf{F1-Score (Macro)} & \textbf{Result} \\ \midrule
+Logistic Regression & 41.2\% & 0.28 & Baseline \\
+SVM (RBF Kernel) & 47.1\% & 0.29 & Good Accuracy \\
+Random Forest & 41.2\% & 0.28 & Moderate \\
+\textbf{XGBoost} & \textbf{47.1\%} & \textbf{0.33} & \textbf{Winner} \\ \bottomrule
+\end{tabular}
+\end{table}
+
+The XGBoost model's accuracy of 47.1\% is statistically significant ($p=0.04 < 0.05$) compared to random chance (25\%), confirming that physical infrastructure contains a real signal for predicting behavioral usage.
+
+\subsubsection{Structural Inelasticity (SHAP Analysis)}
+Feature importance analysis using SHAP (TreeExplainer) revealed that \textbf{Transit Accessibility} (`transit\_accessibility\_index`) and \textbf{Visitor Density} are the primary drivers of park classification. This supports the hypothesis of ``Structural Inelasticity'': a park's role is more heavily influenced by its location and connectivity than by its internal design elements alone.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Structural Inelasticity}
+A key finding is the concept of \textbf{``Structural Inelasticity.''} Our model suggests that the fundamental usage pattern (Cluster type) is primarily determined by macro-urban structure—transit accessibility and density—rather than arguably mutable micro-design features. This implies that simply adding facilities to a poorly connected park may not fundamentally alter its behavioral profile (e.g., transforming a local hub into a youth destination).
+
+\section{Conclusion}
+\label{sec:conclusion}
+This study demonstrated that park usage behavior is predictable based on physical and urban attributes. By employing an XGBoost classifier, we achieved 47\% prediction accuracy on a small pilot dataset, identifying Transit Accessibility as a dominant factor. The framework underscores the need for ``Fit-for-purpose Design'' that aligns park planning with inevitable structural constraints.
+
+\end{document}

@@ -1,0 +1,25 @@
+Category,Feature Name,Description
+Intensity & Congestion,avg_ppltn,Average real-time population
+Intensity & Congestion,max_ppltn,Maximum recorded population
+Intensity & Congestion,ppltn_std,Standard deviation of population
+Intensity & Congestion,avg_congest_lvl,Average official congestion level (1-4)
+Intensity & Congestion,max_congest_lvl,Max congestion level
+Intensity & Congestion,overcrowd_ratio,Ratio of time spent in crowded state
+Temporal,peak_hour_overall,Hour of day with highest volume
+Temporal,time_bias_morning,Proportion of visits 06:00-12:00
+Temporal,time_bias_afternoon,Proportion of visits 12:00-18:00
+Temporal,time_bias_evening,Proportion of visits 18:00-24:00
+Temporal,time_bias_night,Proportion of visits 24:00-06:00
+Temporal,weekend_boost,Ratio of Weekend/Weekday avg volume
+Temporal,daily_consistency_score,Inverse of daily volume volatility
+Demographics,avg_male_ratio,Weighted avg male ratio
+Demographics,avg_youth_ratio,Weighted avg youth (10s-20s) ratio
+Demographics,avg_senior_ratio,Weighted avg senior (60s-70s) ratio
+Demographics,avg_local_ratio,Weighted avg local resident ratio
+Demographics,avg_tourist_ratio,Weighted avg non-resident ratio
+Group Dynamics,youth_peak_hour,Peak hour for youth group
+Group Dynamics,senior_peak_hour,Peak hour for senior group
+Group Dynamics,age_peak_diff,Absolute difference in peak hours
+Group Dynamics,group_variance_youth,Variance in youth attendance
+Group Dynamics,group_variance_senior,Variance in senior attendance
+Group Dynamics,residency_variance,Variance in residency ratio

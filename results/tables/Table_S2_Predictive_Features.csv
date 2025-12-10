@@ -1,0 +1,21 @@
+Category,Feature Name,Description
+Spatial,area_official_m2,Official Park Area (m2)
+Spatial,visitor_density,Avg Visitors per Area
+Spatial,management_intensity,MGM Staff per Area
+Spatial,infrastructure_index,Composite Infra Score
+Spatial,recreation_index,Composite Recreation Score
+Internal,restrooms_count,Count of Restrooms
+Internal,playgrounds_count,Count of Playgrounds
+Internal,exercise_equipment_count,Count of Exercise Equip
+Internal,facility_density,Facilities per m2
+Internal,workers_count,Number of Workers
+Network,topo_node_degree,Avg Node Degree (OSMnx)
+Network,topo_local_efficiency,Local Efficiency (OSMnx)
+Network,topo_clustering_coefficient,Clustering Coeff (OSMnx)
+Network,topo_eccentricity,Eccentricity (Walking Network)
+Network,centrality_score,Betweenness Centrality
+Transit,subway_station_count,Subway Stations within 1km
+Transit,bus_station_count,Bus Stops within 500m
+Transit,total_transit_ridership,Total Daily Ridership
+Transit,transit_accessibility_index,Composite Transit Index
+Transit,distance_to_center,Distance to City Center (km)
